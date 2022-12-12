@@ -13,6 +13,10 @@ class Category(Base):
 
     sites = relationship("Site", back_populates="category")
 
+    class CreateRequiredFields:
+        NAME = str
+        ORDER = int
+
 
 class Site(Base):
     __tablename__ = "sites"
@@ -28,6 +32,13 @@ class Site(Base):
     category = relationship("Category", back_populates="sites")
     responses = relationship("Response", back_populates="site")
 
+    class CreateRequiredFields:
+        NAME = str
+        URL = str
+        IS_ACTIVE = bool
+        ORDER = int
+        CATEGORY_ID = int
+
 
 class Response(Base):
     __tablename__ = "responses"
@@ -40,3 +51,9 @@ class Response(Base):
     site_id = Column(Integer, ForeignKey("sites.id"))
 
     site = relationship("Site", back_populates="responses")
+
+    class CreateRequiredFields:
+        CODE = int
+        SUCCESS = bool
+        TIMESTAMP = int
+        SITE_ID = int
