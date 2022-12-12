@@ -5,6 +5,7 @@ import time
 
 from db.engine import SessionLocal
 from db.crud import Response
+from dependencies import get_db
 
 
 class Scheduler:
@@ -27,7 +28,7 @@ class Scheduler:
 
 def uptime_robot(site_id, site_url):
     res = requests.get(site_url)
-    db = SessionLocal()
+    db = get_db()
     Response(db).create(
         code=res.status_code,
         success=res.ok,
