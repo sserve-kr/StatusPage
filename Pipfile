@@ -8,6 +8,7 @@ fastapi = "*"
 sqlalchemy = "*"
 apscheduler = "*"
 requests = "*"
+pydantic = "*"
 
 [dev-packages]
 
