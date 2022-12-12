@@ -14,8 +14,8 @@ class Category(Base):
     sites = relationship("Site", back_populates="category")
 
     class CreateRequiredFields:
-        NAME = str
-        ORDER = int
+        name = str
+        order = int
 
 
 class Site(Base):
@@ -33,11 +33,11 @@ class Site(Base):
     responses = relationship("Response", back_populates="site")
 
     class CreateRequiredFields:
-        NAME = str
-        URL = str
-        IS_ACTIVE = bool
-        ORDER = int
-        CATEGORY_ID = int
+        name = str
+        url = str
+        is_active = bool
+        order = int
+        category_id = int
 
 
 class Response(Base):
@@ -46,6 +46,7 @@ class Response(Base):
     id = Column(Integer, primary_key=True)
     code = Column(Integer)
     success = Column(Boolean, index=True)
+    response_time = Column(Integer)
     timestamp = Column(Integer, index=True)
 
     site_id = Column(Integer, ForeignKey("sites.id"))
@@ -53,7 +54,8 @@ class Response(Base):
     site = relationship("Site", back_populates="responses")
 
     class CreateRequiredFields:
-        CODE = int
-        SUCCESS = bool
-        TIMESTAMP = int
-        SITE_ID = int
+        code = int
+        success = bool
+        response_time = int
+        timestamp = int
+        site_id = int
