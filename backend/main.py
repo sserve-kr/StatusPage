@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, Depends, HTTPException, Path
+from fastapi import FastAPI, APIRouter, Depends, HTTPException, Path, Response
 import dependencies as dp
 from sqlalchemy.orm import Session
 
@@ -53,7 +53,7 @@ async def delete_site(site_id: int = Path(..., gt=0), db: Session = Depends(dp.g
     if not site:
         raise HTTPException(status_code=404, detail="Site not found")
     crud.Site(db).delete(query={"ID": site_id})
-    return Output.Delete.Site(id=site.id, name=site.name, url=site.url, category_id=site.category_id)
+    return Response()
 
 
 @router.get("/site/{site_id}/response")
