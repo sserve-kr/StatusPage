@@ -31,13 +31,17 @@ class Site:
         if not self.db:
             self.db = get_db()
 
-    def get(self, query: dict) -> models.Site:
+    def get(self, query: dict = None) -> models.Site:
+        if not query:
+            query = []
         self.type_check(query)
         self.db_check()
         query = {attr[1]: value for attr, value in query.items()}
         return self.db.query(models.Site).filter_by(**query).first()
 
-    def get_all(self, query: dict) -> list[models.Site]:
+    def get_all(self, query: dict = None) -> list[models.Site]:
+        if not query:
+            query = []
         self.type_check(query)
         self.db_check()
         if type_errs := [TypeError(f"{cur}, not {exp}") for attr, value in query.items() if (cur := type(value)) != (exp := attr[0])]:
@@ -55,10 +59,9 @@ class Site:
         self.db.refresh(site)
         return site
 
-    def delete(self, site_id: int):
+    def delete(self, query: dict):
         self.db_check()
-        site = self.get({self.ID: site_id})
-        self.db.delete(site)
+        self.get(query).delete()
         self.db.commit()
 
     def update(self, site_id: int, **fields):
@@ -79,7 +82,7 @@ class Category:
     def __init__(self, db: Session = None):
         self.db = db
 
-    def db_check():
+    def db_check(self):
         if not self.db:
             self.db = get_db()
 
@@ -88,17 +91,19 @@ class Category:
         if type_errs := [TypeError(f"{cur}, not {exp}") for attr, value in query.items() if (cur := type(value)) != (exp := attr[0])]:
             raise ExceptionGroup("Invalid Query Types", type_errs)
 
-    def get(self, query: dict) -> models.Category:
+    def get(self, query: dict = None) -> models.Category:
+        if not query:
+            query = []
         self.type_check(query)
         self.db_check()
         query = {attr[1]: value for attr, value in query.items()}
         return self.db.query(models.Category).filter_by(**query).first()
 
-    def get_all(self, query: dict) -> list[models.Category]:
+    def get_all(self, query: dict = None) -> list[models.Category]:
+        if not query:
+            query = []
         self.type_check(query)
         self.db_check()
-        if type_errs := [TypeError(f"{cur}, not {exp}") for attr, value in query.items() if (cur := type(value)) != (exp := attr[0])]:
-            raise ExceptionGroup("Invalid Query Types", type_errs)
         query = {attr[1]: value for attr, value in query.items()}
         return self.db.query(models.Category).filter_by(**query).all()
 
@@ -139,7 +144,7 @@ class Response:
     def __init__(self, db: Session = None):
         self.db = db
 
-    def db_check():
+    def db_check(self):
         if not self.db:
             self.db = get_db()
 
@@ -148,13 +153,17 @@ class Response:
         if type_errs := [TypeError(f"{cur}, not {exp}") for attr, value in query.items() if (cur := type(value)) != (exp := attr[0])]:
             raise ExceptionGroup("Invalid Query Types", type_errs)
 
-    def get(self, query: dict) -> models.Response:
+    def get(self, query: dict = None) -> models.Response:
+        if not query:
+            query = []
         self.type_check(query)
         self.db_check()
         query = {attr[1]: value for attr, value in query.items()}
         return self.db.query(models.Response).filter_by(**query).first()
 
-    def get_all(self, query: dict) -> list[models.Response]:
+    def get_all(self, query: dict = None) -> list[models.Response]:
+        if not query:
+            query = []
         self.type_check(query)
         self.db_check()
         if type_errs := [TypeError(f"{cur}, not {exp}") for attr, value in query.items() if (cur := type(value)) != (exp := attr[0])]:
