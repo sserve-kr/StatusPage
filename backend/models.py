@@ -1,67 +1,45 @@
 from pydantic import BaseModel
 
 
-class Base(BaseModel):
-    error: bool
+class ItemBase(BaseModel):
+    class Config:
+        orm_mode = True
 
 
-class Category(Base):
+class Category(ItemBase):
     id: int
     name: str
+    order: int
 
 
-class Response(Base):
+class CategoryCreate(ItemBase):
+    name: str
+    order: int
+
+
+class Site(ItemBase):
+    id: int
+    name: str
+    url: str
+    category_id: int
+    order: int
+    is_active: bool
+
+
+class SiteCreate(ItemBase):
+    name: str
+    url: str
+    category_id: int
+    order: int
+    is_active: bool
+
+
+class Response(ItemBase):
     id: int
     code: int
     success: bool
     response_time: float
 
 
-class Site(Base):
-    id: int
-    name: str
-    url: str
-    category_id: int
-
-
-class Input:
-    class Create:
-        class Site(Base):
-            name: str
-            url: str
-            category_id: int
-
-
-class Output:
-    class Create:
-        class Site(Base):
-            id: int
-            name: str
-            url: str
-            category_id: int
-
-    class Get:
-        class Category(Base):
-            id: int
-            name: str
-
-        class CategoryList(Base):
-            categories: list[Category]
-
-        class Site(Base):
-            id: int
-            name: str
-            url: str
-            category_id: int
-
-        class SiteList(Base):
-            sites: list[Site]
-
-        class Response(Base):
-            id: int
-            code: int
-            success: bool
-            response_time: float
-
-        class ResponseList(Base):
-            responses: list[Response]
+class ResponseList(ItemBase):
+    responses: list[Response]

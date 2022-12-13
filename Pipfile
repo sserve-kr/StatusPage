@@ -9,6 +9,7 @@ sqlalchemy = "*"
 apscheduler = "*"
 requests = "*"
 pydantic = "*"
+uvicorn = "*"
 
 [dev-packages]
 
