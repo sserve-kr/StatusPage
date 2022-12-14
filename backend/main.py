@@ -16,6 +16,7 @@ router = APIRouter(
 )
 
 engine.Base.metadata.create_all(bind=engine.engine)
+scheduler.init_from_db()
 
 origins = [
     "http://localhost",
@@ -33,6 +34,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@router.get("/auth")
+async def try_auth(auth: bool = Depends(dp.auth)):
+    return {"success": auth}
 
 
 @router.post("/category", response_model=Category)
@@ -80,7 +86,9 @@ async def delete_site(site_id: int = Path(..., gt=0), db: Session = Depends(dp.g
     if not site:
         raise HTTPException(status_code=404, detail="Site not found")
     crud.Site(db).delete(query={crud.Site.ID: site_id})
-    return Response()
+    crud.Response(db).delete_all(query={crud.Response.SITE_ID: site_id})
+    scheduler.remove_robot(site_id=str(site_id))
+    return {"success": True}
 
 
 @router.get("/site/{site_id}/response", response_model=List[Response])

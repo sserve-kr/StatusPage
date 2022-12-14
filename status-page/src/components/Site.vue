@@ -1,6 +1,11 @@
 <template>
 <article class="site">
   <h3>{{name}}</h3>
+  <Button
+      v-if="admin"
+      value="Delete"
+      @click="deleteSite"
+  />
   <div class="response">
     <div
         v-for="res in filteredResponses"
@@ -13,11 +18,17 @@
 </template>
 
 <script>
+import Button from './Button.vue'
+
 export default {
   name: "Site",
   props: {
     id: Number,
-    name: String
+    name: String,
+    admin: Boolean,
+  },
+  components: {
+    Button,
   },
   data() {
     return {
@@ -35,6 +46,18 @@ export default {
         }
       }).then(async response => {
         this.responses = await response.json()
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    deleteSite() {
+      fetch(`http://localhost:3000/api/site/${this.$props.id}?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(async response => {
+        window.location.reload()
       }).catch(error => {
         console.log(error)
       })
@@ -75,10 +98,16 @@ article.site {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 1rem 0 1rem 0;
-  padding: 1.5rem 1rem 1.5rem 1rem;
+  margin: 0 0 0.5rem 0;
+  padding: 1.5rem 1rem;
   border-radius: 0.5rem;
   background-color: #0f0f0f;
+}
+
+@media screen and (max-width: 400px) {
+  article.site {
+    width: 100%;
+  }
 }
 
 article.site div.response {

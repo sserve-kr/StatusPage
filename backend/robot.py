@@ -56,4 +56,3 @@ class Scheduler:
 
 
 scheduler = Scheduler()
-scheduler.init_from_db()

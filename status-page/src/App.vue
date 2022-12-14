@@ -1,7 +1,39 @@
 <template>
   <nav>
-    <Button value="Log in" />
+    <Button value="Log in" @click="() => login_window = !login_window" v-if="!logged_token" />
+    <Button value="Add category" @click="() => addcategory_view = !addcategory_view" v-if="logged_try && logged_token" />
+    <Button value="Log out" @click="tryLogout" v-if="logged_try && logged_token" />
   </nav>
+  <PopupForm
+    :style="{ display: login_window ? 'flex' : 'none' }"
+    title="Log in"
+    :fields="[
+      {
+        id: 'token',
+        label: 'Token',
+        type: 'text',
+        placeholder: 'Token'
+      }
+    ]"
+    SubmitText="Login"
+    @submit="(results) => tryLogin(results['token'])"
+    @close="() => login_window = !login_window"
+  />
+  <PopupForm
+    :style="{ display: addcategory_view ? 'flex' : 'none' }"
+    title="Add category"
+    :fields="[
+      {
+        id: 'name',
+        label: 'Name',
+        type: 'text',
+        placeholder: 'Name'
+      }
+    ]"
+    SubmitText="Add"
+    @submit="(results) => addCategory(results['name'])"
+    @close="() => addcategory_view = !addcategory_view"
+  />
   <main>
     <h1>Status Page</h1>
     <div class="loading" v-if="!categories">
@@ -12,6 +44,7 @@
       v-for="category in categories"
       :id="category.id"
       :name="category.name"
+      :admin="admin"
     />
   </main>
 </template>
@@ -19,16 +52,27 @@
 <script>
 import Category from './components/Category.vue'
 import Button from './components/Button.vue'
+import PopupForm from './components/PopupForm.vue'
 
 export default {
   name: 'App',
   components: {
     Category,
-    Button
+    Button,
+    PopupForm
   },
   data() {
     return {
-      categories: []
+      categories: [],
+      login_window: false,
+      addcategory_view: false,
+      logged_token: "",
+      logged_try: false
+    }
+  },
+  computed: {
+    admin() {
+      return this.logged_try && Boolean(this.logged_token)
     }
   },
   methods: {
@@ -43,6 +87,51 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    tryLogin(cookie_value) {
+      document.cookie = 'token=' + cookie_value + ';'
+      window.location.reload()
+    },
+    tryLogout() {
+      document.cookie = "token=a;EXPIRES="+new Date(0).toUTCString()
+      window.location.reload()
+    },
+    tryLoginWithToken() {
+      fetch(`http://localhost:3000/api/auth?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
+        method: 'GET'
+      }).then(async res => {
+        if (res.status === 200) {
+          this.logged_try = true
+          this.logged_token = / token=([^=]*)/.exec(document.cookie)[1]
+        } else {
+          this.logged_try = true
+        }
+      })
+    },
+    addCategory(name) {
+      fetch(`http://localhost:3000/api/category?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          order: this.categories.length
+        })
+      }).then(async res => {
+        if (res.status === 200) {
+          this.getAllCategories()
+        } else {
+          console.log(await res.json())
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+  },
+  created() {
+    if (document.cookie.includes(" token=")) {
+      this.tryLoginWithToken()
     }
   },
   mounted() {
@@ -71,6 +160,13 @@ html,body {
   font-size: 16px;
   background-color: #1e1e1e;
   color: #ffffff;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+html,body,#app {
+  width: 100vw;
+  height: 100vh;
 }
 
 nav {
@@ -79,15 +175,6 @@ nav {
   padding: 1rem;
   display: flex;
   justify-content: flex-end;
-}
-
-nav button {
-  background-color: #3f3f3f;
-  color: #fff;
-  border: 1px solid #fff;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
 }
 
 main {

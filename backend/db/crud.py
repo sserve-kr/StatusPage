@@ -49,7 +49,8 @@ class Site:
         return site
 
     def delete(self, query: dict):
-        self.get(query).delete()
+        obj = self.get(query)
+        self.db.delete(obj)
         self.db.commit()
 
     def update(self, site_id: int, **fields):
@@ -92,7 +93,6 @@ class Category:
         return self.db.query(models.Category).filter_by(**query).all()
 
     def create(self, **fields) -> models.Category:
-        
         if type_errs := [TypeError(f"{cur}, not {exp}") for attr, value in fields.items() if (cur := type(value)) != (exp := getattr(models.Category.CreateRequiredFields, attr))]:
             raise ExceptionGroup("Invalid Field Types", type_errs)
         category = models.Category(**fields)
@@ -102,13 +102,11 @@ class Category:
         return category
 
     def delete(self, category_id: int):
-        
         category = self.get({self.ID: category_id})
         self.db.delete(category)
         self.db.commit()
 
     def update(self, category_id: int, **fields):
-        
         category = self.get({self.ID: category_id})
         for attr, value in fields.items():
             setattr(category, attr, value)
@@ -154,7 +152,6 @@ class Response:
         return self.db.query(models.Response).filter_by(**query).all()
 
     def create(self, **fields) -> models.Response:
-        
         if type_errs := [TypeError(f"{cur}, not {exp}") for attr, value in fields.items() if (cur := type(value)) != (exp := getattr(models.Response.CreateRequiredFields, attr))]:
             raise ExceptionGroup("Invalid Field Types", type_errs)
         response = models.Response(**fields)
@@ -164,7 +161,13 @@ class Response:
         return response
 
     def delete(self, query: dict):
-        self.get(query).delete()
+        self.db.delete(self.get(query))
+        self.db.commit()
+
+    def delete_all(self, query: dict):
+        objs = self.get_all(query)
+        for obj in objs:
+            self.db.delete(obj)
         self.db.commit()
 
     def delete_old(self, days=None, weeks=None, months=None):

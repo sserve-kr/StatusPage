@@ -51,7 +51,7 @@ class Response(Base):
 
     site_id = Column(Integer, ForeignKey("sites.id"))
 
-    site = relationship("Site", back_populates="responses")
+    site = relationship("Site", cascade="all,delete", back_populates="responses")
 
     class CreateRequiredFields:
         code = int
