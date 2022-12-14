@@ -19,5 +19,7 @@ COPY ./docker-entrypoint.sh ./
 # Expose port 5000
 EXPOSE 5000
 
+RUN chmod +x ./docker-entrypoint.sh
+
 # Run the app
-CMD ["docker-entrypoint.sh"]
+CMD ["./docker-entrypoint.sh"]
