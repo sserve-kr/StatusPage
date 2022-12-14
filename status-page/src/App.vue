@@ -120,7 +120,7 @@ export default {
   mounted() {
     this.getAllCategories()
 
-    if (document.cookie.includes(" token=")) {
+    if (document.cookie.includes("token=")) {
       fetch(`https://status.sserve.work/api/auth?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
         method: 'GET'
       }).then(async res => {
