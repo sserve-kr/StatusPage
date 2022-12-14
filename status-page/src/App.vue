@@ -96,18 +96,6 @@ export default {
       document.cookie = "token=a;EXPIRES="+new Date(0).toUTCString()
       window.location.reload()
     },
-    tryLoginWithToken() {
-      fetch(`https://status.sserve.work/api/auth?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
-        method: 'GET'
-      }).then(async res => {
-        if (res.status === 200) {
-          this.logged_try = true
-          this.logged_token = / token=([^=]*)/.exec(document.cookie)[1]
-        } else {
-          this.logged_try = true
-        }
-      })
-    },
     addCategory(name) {
       fetch(`https://status.sserve.work/api/category?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
         method: 'POST',
@@ -129,13 +117,21 @@ export default {
       })
     }
   },
-  created() {
-    if (document.cookie.includes(" token=")) {
-      this.tryLoginWithToken()
-    }
-  },
   mounted() {
     this.getAllCategories()
+
+    if (document.cookie.includes(" token=")) {
+      fetch(`https://status.sserve.work/api/auth?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
+        method: 'GET'
+      }).then(async res => {
+        if (res.status === 200) {
+          this.logged_try = true
+          this.logged_token = / token=([^=]*)/.exec(document.cookie)[1]
+        } else {
+          this.logged_try = true
+        }
+      })
+    }
   }
 }
 </script>
