@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     getSites() {
-      fetch(`http://localhost:3000/api/category/${this.id}`, {
+      fetch(`https://status.sserve.work/api/category/${this.id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -74,7 +74,7 @@ export default {
     },
     addSite(name, url) {
       console.log(name, url)
-      fetch(`http://localhost:3000/api/site?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
+      fetch(`https://status.sserve.work/api/site?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

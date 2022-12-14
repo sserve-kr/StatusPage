@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     getAllCategories() {
-      fetch('http://localhost:3000/api/category', {
+      fetch('https://status.sserve.work/api/category', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -97,7 +97,7 @@ export default {
       window.location.reload()
     },
     tryLoginWithToken() {
-      fetch(`http://localhost:3000/api/auth?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
+      fetch(`https://status.sserve.work/api/auth?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
         method: 'GET'
       }).then(async res => {
         if (res.status === 200) {
@@ -109,7 +109,7 @@ export default {
       })
     },
     addCategory(name) {
-      fetch(`http://localhost:3000/api/category?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
+      fetch(`https://status.sserve.work/api/category?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

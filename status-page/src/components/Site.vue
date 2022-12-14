@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     getResponses() {
-      fetch(`http://localhost:3000/api/site/${this.$props.id}/response?limit=${this.intervals[this.interval_selection][1]}`, {
+      fetch(`https://status.sserve.work/api/site/${this.$props.id}/response?limit=${this.intervals[this.interval_selection][1]}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ export default {
       })
     },
     deleteSite() {
-      fetch(`http://localhost:3000/api/site/${this.$props.id}?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
+      fetch(`https://status.sserve.work/api/site/${this.$props.id}?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
