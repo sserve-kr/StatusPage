@@ -1,4 +1,5 @@
 from tomllib import load
+import os
 
 from db.engine import SessionLocal
 
@@ -6,6 +7,8 @@ from fastapi import HTTPException, Query
 
 with open("initial.toml", "rb") as f:
     cf = load(f)
+
+os.environ.setdefault("ADMIN_TOKEN", cf["Auth"]["ADMIN_TOKEN"])
 
 
 async def auth(cookie: str = Query(...)) -> bool:
