@@ -6,11 +6,15 @@ RUN pip install --upgrade setuptools
 RUN pip install --upgrade wheel
 
 # use pipenv
-RUN pip install pipenv
+# RUN pip install pipenv
 
 # Install dependencies
-COPY Pipfile Pipfile.lock ./
-RUN pipenv install --system --deploy
+# COPY Pipfile Pipfile.lock ./
+# RUN pipenv install --system --deploy
+# RUN pipenv install tzdata
+
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
 
 # Copy source code (./backend) to working directory
 COPY ./backend ./

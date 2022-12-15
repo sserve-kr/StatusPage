@@ -1,0 +1,6 @@
+fastapi
+sqlalchemy
+apscheduler
+requests
+pydantic
+uvicorn
