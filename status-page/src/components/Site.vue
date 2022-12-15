@@ -51,7 +51,7 @@ export default {
       })
     },
     deleteSite() {
-      fetch(`https://status.sserve.work/api/site/${this.$props.id}?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
+      fetch(`https://status.sserve.work/api/site/${this.$props.id}?cookie=${/token=([^;]*)/.exec(document.cookie)[1]}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

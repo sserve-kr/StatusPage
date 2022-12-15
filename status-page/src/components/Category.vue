@@ -74,7 +74,7 @@ export default {
     },
     addSite(name, url) {
       console.log(name, url)
-      fetch(`https://status.sserve.work/api/site?cookie=${/ token=([^;]*)/.exec(document.cookie)[1]}`, {
+      fetch(`https://status.sserve.work/api/site?cookie=${/token=([^;]*)/.exec(document.cookie)[1]}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
