@@ -16,7 +16,7 @@ def uptime_robot(site_id, site_url):
     Response(db).create(
         code=res.status_code,
         success=res.ok,
-        response_time=res.elapsed.microseconds/1000,
+        response_time=int(res.elapsed.microseconds/1000),
         timestamp=int(time.time()),
         site_id=site_id
     )
