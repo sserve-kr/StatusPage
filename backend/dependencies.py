@@ -13,7 +13,7 @@ os.environ.setdefault("ADMIN_TOKEN", cf["Auth"]["ADMIN_TOKEN"])
 
 async def auth(cookie: str = Query(...)) -> bool:
     """Check if the cookie is valid"""
-    if cf["Auth"]["ADMIN_TOKEN"] == cookie:
+    if os.environ.get("ADMIN_TOKEN") == cookie:
         return True
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
